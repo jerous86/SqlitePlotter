@@ -54,6 +54,7 @@ build_importers() (
 		echo "    $importer -> $OUT"
 		clang++ $INCPATH $CXXFLAGS $LIBS $importer -o "$OUT"
 	done
+	cp to_tsv_from_*.sh $BIN_DIR/
 	cp sqliteplotter-importers*.ini $BIN_DIR/
 	echo "    Done"
 )
