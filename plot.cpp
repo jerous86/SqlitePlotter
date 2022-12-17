@@ -80,7 +80,7 @@ void Set::store(QSettings &settings) const {
 void Set::restore(QSettings &settings) {
 	const int n_plots=settings.value("n-plots",1).toInt();
 	PLOT_RESTORE_SETTING_BOOL(autoReplot, true);
-	PLOT_RESTORE_SETTING_INT(plotMode, 1);
+	PLOT_RESTORE_SETTING_INT(plotMode, 0);
 	setPlotMode(plotMode); // ensure that we always have a valid plot mode
 	// We removed code to customize the image size 26/09/2018 10:46,
 	// because I found out how to let the images resize themselves, and
