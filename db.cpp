@@ -335,10 +335,15 @@ void init_importers() {
 	importers<<new TsvImporter();
 
 	qDebug()<<"Loading importers ...";
+	
 	const QStringList dirs=QStringList()
+		// This path assumes all necessary files are inside a single folder.
+		// I think this is the best option, as storing all these files together provides
+		// the cleanest and easiest experience.
 		<<QCoreApplication::applicationDirPath()
-		<<QCoreApplication::applicationDirPath()+"/../"
-		<<QDir::currentPath();
+		//<<QCoreApplication::applicationDirPath()+"/../"
+		//<<QDir::currentPath()
+		;
 	for(const QString &dir:dirs) {
 		qDebug()<<"Checking dir "<<dir<<" for pattern sqliteplotter-importers*.ini";
 		for(const QString &fileName:QDir(dir).entryList(QStringList()<<"sqliteplotter-importers*.ini")) {
