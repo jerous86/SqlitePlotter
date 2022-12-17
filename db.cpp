@@ -171,7 +171,11 @@ void Db::open_db() {
                     import(dbFile, importer);
                     loaded=true;
                     filesLoaded++;
-                    break;
+                    
+                    // If we enable the break, then we only use the first matching importer.
+                    // By disabling the break, we will use all matching importers.
+                    // E.g. for pcaps, we can import just regular stats and ip packets.
+                    //break;
                 }
             }
             if (!loaded) {
