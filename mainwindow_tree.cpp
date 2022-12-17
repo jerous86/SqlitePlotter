@@ -502,7 +502,7 @@ void MainWindow::on_btnSortTraces_clicked() {
 }
 
 
-void MainWindow::on_btnCheckAll_clicked() {
+void MainWindow::_on_btnCheckAll_clicked() {
 	GET_SEL_P(true);
 	if (plots.size()==0) { return; }
 	push_undo("Check","all");
@@ -514,7 +514,7 @@ void MainWindow::on_btnCheckAll_clicked() {
 	if (set.autoReplot) { on_btnPlot_clicked(); }
 }
 
-void MainWindow::on_btnUncheckAll_clicked() {
+void MainWindow::_on_btnUncheckAll_clicked() {
 	GET_SEL_P(true);
 	if (plots.size()==0) { return; }
 	push_undo("Uncheck","all");
@@ -526,7 +526,7 @@ void MainWindow::on_btnUncheckAll_clicked() {
 	if (set.autoReplot) { on_btnPlot_clicked(); }
 }
 
-void MainWindow::on_btnCheckWithData_clicked() {
+void MainWindow::_on_btnCheckWithData_clicked() {
 	GET_SEL_P(true);
 	if (plots.size()==0) { return; }
 	push_undo("Check","w/ data");

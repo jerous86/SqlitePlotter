@@ -185,7 +185,7 @@ private slots:
 	void on_btnDeleteGlobalVar_clicked();
 	void on_tblGlobalVars_itemChanged(QTableWidgetItem *item);
 	void on_tblGlobalVars_currentItemChanged(QTableWidgetItem *current, QTableWidgetItem *);
-	void on_btnSaveImages_clicked();
+	void _on_btnSaveImages_clicked();
 	void handleVarsContextMenu(const QPoint& pos);
 
 	void on_btnPlot_clicked();
@@ -272,10 +272,10 @@ private slots:
 	void on_cmbPlotMode_currentIndexChanged(int index);
 	void on_btnResizeWindows_clicked();
 	void on_btnSortTraces_clicked();
-	void on_btnCheckAll_clicked();
-	void on_btnUncheckAll_clicked();
-	void on_btnCheckWithData_clicked();
-	void on_btnSaveData_clicked();
+	void _on_btnCheckAll_clicked();
+	void _on_btnUncheckAll_clicked();
+	void _on_btnCheckWithData_clicked();
+	void _on_btnSaveData_clicked();
 	void on_btnDatabase_pressed();
     void on_btnZoomToRect_clicked();
 };

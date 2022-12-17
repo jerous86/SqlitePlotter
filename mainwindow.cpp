@@ -101,13 +101,13 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWi
 	ui->btnDatabase->setMenu(&menuFile);
 	ui->btnSettingsFile->setMenu(&menuSettings);
 	ui->btnCheck->setMenu(&menuCheck);
-	connect(menuCheck.addAction("Check with data"), SIGNAL(triggered()), SLOT(on_btnCheckWithData_clicked()));
-	connect(menuCheck.addAction("Uncheck all"), SIGNAL(triggered()), SLOT(on_btnUncheckAll_clicked()));
-	connect(menuCheck.addAction("Check all"), SIGNAL(triggered()), SLOT(on_btnCheckAll_clicked()));
+	connect(menuCheck.addAction("Check with data"), SIGNAL(triggered()), SLOT(_on_btnCheckWithData_clicked()));
+	connect(menuCheck.addAction("Uncheck all"), SIGNAL(triggered()), SLOT(_on_btnUncheckAll_clicked()));
+	connect(menuCheck.addAction("Check all"), SIGNAL(triggered()), SLOT(_on_btnCheckAll_clicked()));
 
 	ui->btnExportMenu->setMenu(&menuExport);
-	connect(menuExport.addAction("To png ..."), SIGNAL(triggered()), SLOT(on_btnSaveImages_clicked()));
-	connect(menuExport.addAction("To text files ..."), SIGNAL(triggered()), SLOT(on_btnSaveData_clicked()));
+	connect(menuExport.addAction("To png ..."), SIGNAL(triggered()), SLOT(_on_btnSaveImages_clicked()));
+	connect(menuExport.addAction("To text files ..."), SIGNAL(triggered()), SLOT(_on_btnSaveData_clicked()));
 
 	{
 		auto wg=ui->tblData;
@@ -624,7 +624,7 @@ void MainWindow::setSettingsFile(const QString &f) {
 
 
 
-void MainWindow::on_btnSaveImages_clicked() {
+void MainWindow::_on_btnSaveImages_clicked() {
     QSETTINGS;
 	GET_SEL_P(false);
 
@@ -696,7 +696,7 @@ void MainWindow::on_btnSaveImages_clicked() {
 
 
 void exportTraceData(QTextStream &out, const Trace *trace, QString columnFilter, bool ungroup);
-void MainWindow::on_btnSaveData_clicked() {
+void MainWindow::_on_btnSaveData_clicked() {
     QSETTINGS;
 	GET_SEL_P(false);
 
