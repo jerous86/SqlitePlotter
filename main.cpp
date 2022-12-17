@@ -17,14 +17,19 @@ int main(int argc, char *args[])
 //#endif
     init_importers();
 
-    MainWindow w;
-
     QStringList dbFiles;
     for(int i=1; i<argc; i++) {
         if (QFileInfo(QString(args[i])).exists()) {
             dbFiles<<args[i];
         }
     }
+
+	if (dbFiles.size()>0) {
+		// Avoids loading the files on the command line twice.
+		restoreDbFileAndSettingsFile=false;
+	}
+    MainWindow w;
+	restoreDbFileAndSettingsFile=true;
 
     if (dbFiles.size()>0) {
         qDebug()<<"Loading "<<dbFiles.size()<<" files, passed from the command line";

@@ -52,6 +52,7 @@ QTreeWidgetItem *pos_to_item(QTreeWidget *tree, const QList<int> &pos);
 #define DB_FILES_SPLIT_CHAR "|"
 
 extern const MapQStringQString EmptyOverride;
+extern bool restoreDbFileAndSettingsFile;
 
 class MyQCustomPlotter;
 

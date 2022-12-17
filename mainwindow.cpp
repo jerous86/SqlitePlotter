@@ -192,7 +192,7 @@ QMap<QString,QStringList> deserialize(QByteArray &data) {
 
 // If false, then we will not change the db_file and settings_file in MainWindow::restoreState.
 // This is needed when we have SyncWindows checked, and we are using different database files!
-static bool restoreDbFileAndSettingsFile=true;
+bool restoreDbFileAndSettingsFile=true;
 
 void MainWindow::storeState() {
 	{
