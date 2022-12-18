@@ -392,8 +392,9 @@ void MainWindow::refresh_menuFile() {
 		QAction *action=menuFile.addAction(QString("Open file(s) ... \t%1").arg(QKeySequence(QKeySequence::Open).toString()));
 		action->setShortcut(QKeySequence::Open);
         connect(action, &QAction::triggered, [this,allFilters]() {
+			const QString lastUsedDirectory=(db.dbFiles.size()>0 ? db.dbFiles[0] : "");
             const QStringList new_dbs=QFileDialog::getOpenFileNames(this,
-              "Select database files", "", allFilters,
+			  "Select database files", lastUsedDirectory, allFilters,
 			  nullptr, QFileDialog::DontResolveSymlinks);
             if (new_dbs.length()==0) { return; }
             loadFiles(new_dbs);
@@ -439,8 +440,9 @@ void MainWindow::refresh_menuFile() {
 		QAction *action=menuFile.addAction(QString("Open additional file(s) ..."));
 		action->setShortcut(QKeySequence::Open);
         connect(action, &QAction::triggered, [this,allFilters]() {
-            const QStringList new_dbs=QFileDialog::getOpenFileNames(this,
-              "Select database files", "", allFilters,
+			const QString lastUsedDirectory=(db.dbFiles.size()>0 ? db.dbFiles[0] : "");
+			const QStringList new_dbs=QFileDialog::getOpenFileNames(this,
+			  "Select database files", lastUsedDirectory, allFilters,
 			  nullptr, QFileDialog::DontResolveSymlinks);
             if (new_dbs.length()==0) { return; }
             loadAdditionalFiles(new_dbs);
