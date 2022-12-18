@@ -40,6 +40,12 @@ void MyQCustomPlotter::paintEvent(QPaintEvent *e) {
 
             p.drawLine(x1, 0, x1, h);
             p.drawLine(0, y1, w, y1);
+            
+            if (plottable()) {
+                double xx1,yy1; plottable()->pixelsToCoords(x1,y1, xx1,yy1);
+                p.setPen(Qt::black);
+                p.drawText(x1,y1,QString("(%1,%2)").arg(xx1).arg(yy1));
+            }
         }
 
         if (p2) {
@@ -52,6 +58,16 @@ void MyQCustomPlotter::paintEvent(QPaintEvent *e) {
             QColor fill=QColor(Qt::yellow).lighter();
             fill.setAlpha(80);
             p.fillRect(QRect(x1,y1, x2-x1,y2-y1), fill);
+			
+            if (plottable()) {
+                double xx1,yy1; plottable()->pixelsToCoords(x1,y1, xx1,yy1);
+                double xx2,yy2; plottable()->pixelsToCoords(x2,y2, xx2,yy2);
+				
+                p.setPen(Qt::black);
+                p.drawText(x1,y1,QString("(%1,%2)").arg(xx1).arg(yy1));
+                p.drawText(x2,y2,QString("(%1,%2)").arg(xx2).arg(yy2));
+                p.drawText(std::min(x1,x2),(y1+y2)/2,QString("w:%1, h:%2)").arg(abs(xx1-xx2)).arg(abs(yy1-yy2)));
+            }
         }
     }
 }
