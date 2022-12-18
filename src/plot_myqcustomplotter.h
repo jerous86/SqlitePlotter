@@ -17,6 +17,7 @@ public:
     QString label() const;
 
     QCPTextElement *title=nullptr;
+	QVector<double> horizontals, verticals;
 
     void updateSelection(int i);
 protected:
@@ -26,7 +27,7 @@ protected:
     void paintEvent(QPaintEvent *e) override;
 	
 	  
-	Q_SLOT Q_SLOT void on_plottableClick (QCPAbstractPlottable *plottable, int, QMouseEvent *event);
+	Q_SLOT void on_plottableClick (QCPAbstractPlottable *plottable, int, QMouseEvent *event);
 	Q_SLOT void on_itemClick(QCPAbstractItem *item, QMouseEvent *event);
 	Q_SLOT void on_legendClick(QCPLegend *legend, QCPAbstractLegendItem *item, QMouseEvent *event);
 	Q_SLOT void on_selectionChangedByUser();

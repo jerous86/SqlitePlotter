@@ -69,7 +69,19 @@ void MyQCustomPlotter::paintEvent(QPaintEvent *e) {
                 p.drawText(std::min(x1,x2),(y1+y2)/2,QString("w:%1, h:%2)").arg(abs(xx1-xx2)).arg(abs(yy1-yy2)));
             }
         }
-    }
+
+		p.setPen(Qt::black);
+		for(const double x:verticals) {
+			const QPointF px=plottable()->coordsToPixels(x,x);
+			p.drawLine(px.x(),0, px.x(),height());
+		}
+
+		p.setPen(Qt::black);
+		for(const double y:horizontals) {
+			const QPointF px=plottable()->coordsToPixels(y,y);
+			p.drawLine(0,px.y(), width(),px.y());
+		}
+	}
 }
 
 void MyQCustomPlotter::mousePressEvent(QMouseEvent *e) {

@@ -99,6 +99,10 @@ void GeneratePlotTask::run_QCustomPlot(const Plot &plot, const PlotOptions &opts
     double min_x=1e99, min_y=1e99, max_x=-1e99, max_y=-1e99;
     int serieIdx=-1;
     QVector<QCPAbstractPlottable *> graphs;
+
+	p->horizontals.clear();
+	p->verticals.clear();
+
     for(const Trace *trace_:plot.traces) {
         serieIdx++;
         const Trace &trace=*trace_;
@@ -110,30 +114,52 @@ void GeneratePlotTask::run_QCustomPlot(const Plot &plot, const PlotOptions &opts
         if (trace.style) { select_columns.append(trace.style->extra_columns(trace)); }
 
         QVector<double> x,y,z;
-        for(auto row:*trace.data(select_columns, DoUseTraceQuery, NoUngroup, override_vars)) {
-            if (row.size()<2) { continue; }
-            x<<row[0].toDouble();
-            y<<row[1].toDouble();
-            if (row.size()>=3) { z<<row[2].toDouble(); }
+		const QString q=trace.get_query(override_vars);
+		if (isSpecialQuery(q)) {
+			{ QRegularExpressionMatch m=matchSpecialVertical.match(q);
+				if (m.hasMatch()) {
+					const float x=m.captured(1).toFloat();
+					p->verticals<<x;
+					// TODO don't ignore color
+				}
+			}
 
-            min_x=std::min(x.back(), min_x);
-            min_y=std::min(y.back(), min_y);
-            max_x=std::max(x.back(), max_x);
-            max_y=std::max(y.back(), max_y);
-        }
+			{ QRegularExpressionMatch m=matchSpecialHorizontal.match(q);
+				if (m.hasMatch()) {
+					const float y=m.captured(1).toFloat();
+					p->horizontals<<y;
+					// TODO don't ignore color
+				}
+			}
+		} else {
+			const Trace::Rows *rows=trace.data(select_columns, DoUseTraceQuery, NoUngroup, override_vars);
+			if (rows) {
+				for(auto row:*rows) {
+					if (row.size()<2) { continue; }
+					x<<row[0].toDouble();
+					y<<row[1].toDouble();
+					if (row.size()>=3) { z<<row[2].toDouble(); }
 
-        Q_ASSERT(trace.style!=nullptr);
-        TraceStyle &style=*trace.style;
+					min_x=std::min(x.back(), min_x);
+					min_y=std::min(y.back(), min_y);
+					max_x=std::max(x.back(), max_x);
+					max_y=std::max(y.back(), max_y);
+				}
 
-        QCPAbstractPlottable *graph = style.plot_QCustomPlot(plot, p, trace, serieIdx, x, y, z, graphs);
-        if (graph) {
-            graph->setPen(get_color(plot, trace));
-            graph->setName(trace.get_title(override_vars));
-			graph->rescaleAxes();
+				Q_ASSERT(trace.style!=nullptr);
+				TraceStyle &style=*trace.style;
 
-            graphs<<graph;
-            Q_ASSERT(p->plottableCount()>0);
-        }
+				QCPAbstractPlottable *graph = style.plot_QCustomPlot(plot, p, trace, serieIdx, x, y, z, graphs);
+				if (graph) {
+					graph->setPen(get_color(plot, trace));
+					graph->setName(trace.get_title(override_vars));
+					graph->rescaleAxes();
+
+					graphs<<graph;
+					Q_ASSERT(p->plottableCount()>0);
+				}
+			}
+		}
     }
 	p->updateSelection(-1);
 
