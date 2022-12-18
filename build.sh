@@ -33,39 +33,21 @@ build_SqlitePlotter() (
 	echo "    Done"
 )
 
-build_importers() (
-	echo "Building importers"
-	case $OSTYPE in
-		darwin*)
-			CXXFLAGS="-pipe -stdlib=libc++ -O2 -std=gnu++1z -isysroot /Library/Developer/CommandLineTools/SDKs/MacOSX.sdk -mmacosx-version-min=12.0 -Wall -Wextra -fPIC"
-			INCPATH="-I /usr/local/include/QtCore/ -F/usr/local/lib"
-			LIBS="-F/usr/local/lib -L/usr/local/lib/ -framework QtCore"
-			;;
-		*)
-			CXXFLAGS="-O2 -Wall -Wextra --std=c++11 -fPIC"
-			INCPATH="$(pkg-config --cflags Qt5Core)"
-			LIBS="$(pkg-config --libs Qt5Core)"
-			;;
-	esac
-
-	mkdir -p $BIN_DIR/
-	for importer in to_tsv_*.cpp; do
-		OUT=$BIN_DIR/$(basename $importer .cpp)
-		echo "    $importer -> $OUT"
-		clang++ $INCPATH $CXXFLAGS $LIBS $importer -o "$OUT"
-	done
-	cp to_tsv_from_*.sh $BIN_DIR/
-	cp sqliteplotter*.ini $BIN_DIR/
-	echo "    Done"
-)
-
-if [ $# -eq 0 ]; then $0 SqlitePlotter importers; fi
+if [ $# -eq 0 ]; then $0 SqlitePlotter importers; exit 0; fi
 
 while [ $# -gt 0 ]; do
 	case $1 in
-		SqlitePlotter) build_SqlitePlotter ;;
-		importers) build_importers ;;
+		SqlitePlotter)
+			build_SqlitePlotter
+			;;
+		importers) 
+			make -C importers all
+			;;
 		*) echo "Don't know how to build '$1'. Ignoring." ;;
 	esac
 	shift
 done
+
+cp $(ls importers/*.cpp | sed s'#[.]cpp##g') $BIN_DIR
+cp to_tsv_from_*.sh $BIN_DIR/
+cp sqliteplotter*.ini $BIN_DIR/
