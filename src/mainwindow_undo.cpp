@@ -61,10 +61,10 @@ void MainWindow::post_xdo(const bool keep_sel) {
 }
 
 void MainWindow::updateHistoryButtons() {
-//    ui->btnUndo->setText(QString("U %1 (%2)").arg(undo_history.size() ? undo_history.back().first.mid(0,30) : "\n").arg(undo_history.size()));
-//	ui->btnRedo->setText(QString("R %1 (%2)").arg(redo_history.size() ? redo_history.front().first.mid(0,30) : "\n").arg(redo_history.size()));
-    ui->btnUndo->setText(QString("U %1 (%2)").arg("").arg(undo_history.size()));
-    ui->btnRedo->setText(QString("R %1 (%2)").arg("").arg(redo_history.size()));
+//    ui->btnUndo->setText(QString("Undo %1 (%2)").arg(undo_history.size() ? undo_history.back().first.mid(0,30) : "\n").arg(undo_history.size()));
+//	ui->btnRedo->setText(QString("Redo %1 (%2)").arg(redo_history.size() ? redo_history.front().first.mid(0,30) : "\n").arg(redo_history.size()));
+	ui->btnUndo->setText(QString("Undo %1 (%2)").arg("").arg(undo_history.size()));
+	ui->btnRedo->setText(QString("Redo %1 (%2)").arg("").arg(redo_history.size()));
     ui->btnUndo->repaint();
 	ui->btnRedo->repaint();
 }

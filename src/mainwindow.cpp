@@ -150,7 +150,9 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWi
 
     QList<QWidget*> hide;
     hide
-        <<ui->chkWinSync <<ui->btnResizeWindows <<ui->chkKeepAR <<ui->cmbPlotMode
+		<<ui->btnNewWindow
+		<<ui->chkAutoReplot<<ui->btnStoreAdd<<ui->btnStoreRemove<<ui->btnClearStore
+		<<ui->chkWinSync <<ui->btnResizeWindows <<ui->chkKeepAR <<ui->cmbPlotMode
         <<ui->lblGrid<<ui->txtAltColumns<<ui->txtAltRows
 		<<ui->btnMulticlone2
         <<ui->chkStableColors<<ui->chkBBox<<ui->chkD3Grid

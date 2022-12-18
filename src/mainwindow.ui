@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>1174</width>
+    <width>1420</width>
     <height>792</height>
    </rect>
   </property>
@@ -77,14 +77,14 @@
           <item>
            <widget class="QPushButton" name="btnDatabase">
             <property name="text">
-             <string>🗄  ...</string>
+             <string>File ...</string>
             </property>
            </widget>
           </item>
           <item>
            <widget class="QPushButton" name="btnSettingsFile">
             <property name="text">
-             <string>⚙ ...</string>
+             <string>Settings ...</string>
             </property>
            </widget>
           </item>
@@ -764,8 +764,8 @@
                      <string>&lt;!DOCTYPE HTML PUBLIC &quot;-//W3C//DTD HTML 4.0//EN&quot; &quot;http://www.w3.org/TR/REC-html40/strict.dtd&quot;&gt;
 &lt;html&gt;&lt;head&gt;&lt;meta name=&quot;qrichtext&quot; content=&quot;1&quot; /&gt;&lt;style type=&quot;text/css&quot;&gt;
 p, li { white-space: pre-wrap; }
-&lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-family:'Sans Serif'; font-size:10pt; font-weight:400; font-style:normal;&quot;&gt;
-&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-family:'.SF NS Text'; font-size:13pt;&quot;&gt;SELECT SCHED||RUN AS SCHED,SCEN,avg(pred),avg(m1),avg(Dm),avg(D95),avg(thr)/1e6 FROM metrics WHERE SCEN='scen2_1a0' GROUP BY SCEN,USER,APP&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+&lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-family:'.AppleSystemUIFont'; font-size:13pt; font-weight:400; font-style:normal;&quot;&gt;
+&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-family:'.SF NS Text';&quot;&gt;SELECT SCHED||RUN AS SCHED,SCEN,avg(pred),avg(m1),avg(Dm),avg(D95),avg(thr)/1e6 FROM metrics WHERE SCEN='scen2_1a0' GROUP BY SCEN,USER,APP&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
                     </property>
                    </widget>
                   </item>
@@ -826,27 +826,15 @@ p, li { white-space: pre-wrap; }
                    <layout class="QVBoxLayout" name="verticalLayout_2">
                     <item>
                      <widget class="QPushButton" name="btnAddPlotVar">
-                      <property name="maximumSize">
-                       <size>
-                        <width>30</width>
-                        <height>16777215</height>
-                       </size>
-                      </property>
                       <property name="text">
-                       <string>+</string>
+                       <string>Add</string>
                       </property>
                      </widget>
                     </item>
                     <item>
                      <widget class="QPushButton" name="btnDeletePlotVar">
-                      <property name="maximumSize">
-                       <size>
-                        <width>30</width>
-                        <height>16777215</height>
-                       </size>
-                      </property>
                       <property name="text">
-                       <string>-</string>
+                       <string>Del</string>
                       </property>
                      </widget>
                     </item>
@@ -939,8 +927,8 @@ p, li { white-space: pre-wrap; }
                        <string>&lt;!DOCTYPE HTML PUBLIC &quot;-//W3C//DTD HTML 4.0//EN&quot; &quot;http://www.w3.org/TR/REC-html40/strict.dtd&quot;&gt;
 &lt;html&gt;&lt;head&gt;&lt;meta name=&quot;qrichtext&quot; content=&quot;1&quot; /&gt;&lt;style type=&quot;text/css&quot;&gt;
 p, li { white-space: pre-wrap; }
-&lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-family:'Sans Serif'; font-size:10pt; font-weight:400; font-style:normal;&quot;&gt;
-&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-family:'.SF NS Text'; font-size:13pt;&quot;&gt;SELECT SCHED||RUN AS SCHED,SCEN,avg(pred),avg(m1),avg(Dm),avg(D95),avg(thr)/1e6 FROM metrics WHERE SCEN='scen2_1a0' GROUP BY SCEN,USER,APP&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+&lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-family:'.AppleSystemUIFont'; font-size:13pt; font-weight:400; font-style:normal;&quot;&gt;
+&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-family:'.SF NS Text';&quot;&gt;SELECT SCHED||RUN AS SCHED,SCEN,avg(pred),avg(m1),avg(Dm),avg(D95),avg(thr)/1e6 FROM metrics WHERE SCEN='scen2_1a0' GROUP BY SCEN,USER,APP&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
                       </property>
                      </widget>
                     </item>
@@ -1013,8 +1001,8 @@ p, li { white-space: pre-wrap; }
                        <string>&lt;!DOCTYPE HTML PUBLIC &quot;-//W3C//DTD HTML 4.0//EN&quot; &quot;http://www.w3.org/TR/REC-html40/strict.dtd&quot;&gt;
 &lt;html&gt;&lt;head&gt;&lt;meta name=&quot;qrichtext&quot; content=&quot;1&quot; /&gt;&lt;style type=&quot;text/css&quot;&gt;
 p, li { white-space: pre-wrap; }
-&lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-family:'Sans Serif'; font-size:10pt; font-weight:400; font-style:italic;&quot;&gt;
-&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-family:'.SF NS Text'; font-style:normal;&quot;&gt;(Final query comes here)&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+&lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-family:'.AppleSystemUIFont'; font-size:13pt; font-weight:400; font-style:italic;&quot;&gt;
+&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-family:'.SF NS Text'; font-size:10pt; font-style:normal;&quot;&gt;(Final query comes here)&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
                       </property>
                      </widget>
                     </item>
@@ -1234,27 +1222,15 @@ p, li { white-space: pre-wrap; }
                         </property>
                         <item>
                          <widget class="QPushButton" name="btnAddTraceVar">
-                          <property name="maximumSize">
-                           <size>
-                            <width>30</width>
-                            <height>16777215</height>
-                           </size>
-                          </property>
                           <property name="text">
-                           <string>+</string>
+                           <string>Add</string>
                           </property>
                          </widget>
                         </item>
                         <item>
                          <widget class="QPushButton" name="btnDeleteTraceVar">
-                          <property name="maximumSize">
-                           <size>
-                            <width>30</width>
-                            <height>16777215</height>
-                           </size>
-                          </property>
                           <property name="text">
-                           <string>-</string>
+                           <string>Del</string>
                           </property>
                          </widget>
                         </item>
@@ -1314,11 +1290,11 @@ p, li { white-space: pre-wrap; }
                   <property name="sortingEnabled">
                    <bool>true</bool>
                   </property>
-                  <attribute name="horizontalHeaderDefaultSectionSize">
-                   <number>50</number>
-                  </attribute>
                   <attribute name="horizontalHeaderMinimumSectionSize">
                    <number>5</number>
+                  </attribute>
+                  <attribute name="horizontalHeaderDefaultSectionSize">
+                   <number>50</number>
                   </attribute>
                   <attribute name="horizontalHeaderStretchLastSection">
                    <bool>true</bool>
@@ -1466,6 +1442,33 @@ p, li { white-space: pre-wrap; }
             <property name="spacing">
              <number>0</number>
             </property>
+           </layout>
+          </item>
+          <item>
+           <layout class="QHBoxLayout" name="horizontalLayout_6">
+            <property name="spacing">
+             <number>0</number>
+            </property>
+            <item>
+             <widget class="QPushButton" name="btnStoreAdd">
+              <property name="toolTip">
+               <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Add a new image to the store. The store is a collection of fixed images.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+              </property>
+              <property name="text">
+               <string>+</string>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <widget class="QPushButton" name="btnStoreRemove">
+              <property name="toolTip">
+               <string>Removes the last addition to the store</string>
+              </property>
+              <property name="text">
+               <string>-</string>
+              </property>
+             </widget>
+            </item>
             <item>
              <widget class="QCheckBox" name="chkAutoReplot">
               <property name="text">
@@ -1493,60 +1496,15 @@ p, li { white-space: pre-wrap; }
              </widget>
             </item>
             <item>
-             <widget class="QGroupBox" name="groupBox">
-              <property name="title">
-               <string/>
+             <widget class="QPushButton" name="btnClearStore">
+              <property name="toolTip">
+               <string>Clear all the whole store.</string>
               </property>
-              <layout class="QHBoxLayout" name="horizontalLayout_8">
-               <property name="spacing">
-                <number>0</number>
-               </property>
-               <property name="topMargin">
-                <number>0</number>
-               </property>
-               <property name="bottomMargin">
-                <number>0</number>
-               </property>
-               <item>
-                <widget class="QPushButton" name="btnStoreAdd">
-                 <property name="toolTip">
-                  <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Add a new image to the store. The store is a collection of fixed images.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-                 </property>
-                 <property name="text">
-                  <string>+</string>
-                 </property>
-                </widget>
-               </item>
-               <item>
-                <widget class="QPushButton" name="btnStoreRemove">
-                 <property name="toolTip">
-                  <string>Removes the last addition to the store</string>
-                 </property>
-                 <property name="text">
-                  <string>-</string>
-                 </property>
-                </widget>
-               </item>
-               <item>
-                <widget class="QPushButton" name="btnClearStore">
-                 <property name="toolTip">
-                  <string>Clear all the whole store.</string>
-                 </property>
-                 <property name="text">
-                  <string>Clear</string>
-                 </property>
-                </widget>
-               </item>
-              </layout>
+              <property name="text">
+               <string>Clear</string>
+              </property>
              </widget>
             </item>
-           </layout>
-          </item>
-          <item>
-           <layout class="QHBoxLayout" name="horizontalLayout_6">
-            <property name="spacing">
-             <number>0</number>
-            </property>
             <item>
              <widget class="QCheckBox" name="chkWinSync">
               <property name="toolTip">
