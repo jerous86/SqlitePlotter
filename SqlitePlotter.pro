@@ -28,57 +28,60 @@ win32 {
 ;CONFIG += debug
 ;QMAKE_CXXFLAGS += -g
 
-INCLUDEPATH += sqlite-amalgamation-3390300
+INCLUDEPATH += src/ src/sqlite-amalgamation-3390300
 
-SOURCES +=  main.cpp  \
-mainwindow.cpp \
-    columnalignedlayout.cpp \
-    mainwindow_data.cpp \
-    mainwindow_import.cpp \
-    mainwindow_plot.cpp \
-    mainwindow_tree.cpp \
-    mainwindow_undo.cpp \
-    mainwindow_vars.cpp \
-    myplotter_helpers.cpp \
-    plot.cpp \
-    db.cpp \
-    plot_myplotter.cpp \
-    plot_myqcustomplotter.cpp \
-    qcustomplot.cpp \
-    plot_task.cpp \
-    libsqlitefunctions.c percentile.c \
-    tracestyle.cpp \
-    batchsave.cpp \
-    highlighters.cpp \
-    aspectratiopixmaplabel.cpp \
-    misc.cpp \
-    tracestyle/StackedLine.cpp \
-    tracestyle/VertHist.cpp \
-    tracestyle/histogramxd.cpp \
-    tracestyle/pointsxd.cpp \
-    tracestyle/violinplot.cpp \
-    sqlite-amalgamation-3390300/sqlite3.c
+SOURCES +=  \
+    src/main.cpp  \
+    src/mainwindow.cpp \
+    src/columnalignedlayout.cpp \
+    src/mainwindow_data.cpp \
+    src/mainwindow_import.cpp \
+    src/mainwindow_plot.cpp \
+    src/mainwindow_tree.cpp \
+    src/mainwindow_undo.cpp \
+    src/mainwindow_vars.cpp \
+    src/myplotter_helpers.cpp \
+    src/plot.cpp \
+    src/db.cpp \
+    src/plot_myplotter.cpp \
+    src/plot_myqcustomplotter.cpp \
+    src/qcustomplot.cpp \
+    src/plot_task.cpp \
+    src/libsqlitefunctions.c \
+    src/percentile.c \
+    src/tracestyle.cpp \
+    src/batchsave.cpp \
+    src/highlighters.cpp \
+    src/aspectratiopixmaplabel.cpp \
+    src/misc.cpp \
+    src/tracestyle/StackedLine.cpp \
+    src/tracestyle/VertHist.cpp \
+    src/tracestyle/histogramxd.cpp \
+    src/tracestyle/pointsxd.cpp \
+    src/tracestyle/violinplot.cpp \
+    src/sqlite-amalgamation-3390300/sqlite3.c
 
-HEADERS +=  mainwindow.h \
-    columnalignedlayout.h \
-    my_math.h \
-    myplotter_helpers.h \
-    myplotter_scene.h \
-    plot.h \
-    db.h \
-    misc.h \
-    plot_myplotter.h \
-    plot_myqcustomplotter.h \
-    qcustomplot.h \
-    plot_task.h \
-    tracestyle/helpers.h \
-    tracestyles.h \
-    batchsave.h \
-    highlighters.h \
-    aspectratiopixmaplabel.h \
-    sqlite-amalgamation-3390300/sqlite3.h
+HEADERS += \
+    src/mainwindow.h \
+    src/columnalignedlayout.h \
+    src/my_math.h \
+    src/myplotter_helpers.h \
+    src/myplotter_scene.h \
+    src/plot.h \
+    src/db.h \
+    src/misc.h \
+    src/plot_myplotter.h \
+    src/plot_myqcustomplotter.h \
+    src/qcustomplot.h \
+    src/plot_task.h \
+    src/tracestyle/helpers.h \
+    src/tracestyles.h \
+    src/batchsave.h \
+    src/highlighters.h \
+    src/aspectratiopixmaplabel.h \
+    src/sqlite-amalgamation-3390300/sqlite3.h
 
-FORMS +=  mainwindow.ui  batchsave.ui
+FORMS +=  src/mainwindow.ui  src/batchsave.ui
 ICON = icon.icns
 
 # If encountering

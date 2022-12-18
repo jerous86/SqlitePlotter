@@ -49,5 +49,5 @@ while [ $# -gt 0 ]; do
 done
 
 cp $(ls importers/*.cpp | sed s'#[.]cpp##g') $BIN_DIR
-cp to_tsv_from_*.sh $BIN_DIR/
+cp importers/to_tsv_from_*.sh $BIN_DIR/
 cp sqliteplotter*.ini $BIN_DIR/
