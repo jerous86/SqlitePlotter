@@ -261,6 +261,13 @@ void MainWindow::restoreState() {
 
 
     QSETTINGS;
+	if (!QFileInfo(settings.fileName()).isWritable()) {
+		QMessageBox::warning(this,
+			QString("Settings file %1 is not writable").arg(settings.fileName()),
+			QString("The settings file\n%1\nis not writable, and your changes will not be saved.\n\n"
+					"Either save the settings file first (using Settings > Save as new settings file), or make the file writable.").arg(settings.fileName())
+			);
+	}
 	//hide();
 	restoreGeometry(settings.value("mainWindowGeometry").toByteArray());
 	QMainWindow::restoreState(settings.value("mainWindowState").toByteArray());
@@ -527,7 +534,7 @@ void MainWindow::refresh_menuSettings() {
 	menu.clear();
 
 	{
-		QAction *action=menu.addAction("Open file ...");
+		QAction *action=menu.addAction("Open settings file ...");
 		connect(action, &QAction::triggered, [this]() {
 			QString settings_file2=QFileDialog::getOpenFileName(this, "Select a ini settings files", QFileInfo(settings_file).absolutePath(), "sqliteplotter settings (sqliteplotter.*.ini);;All files (*.*)");
 			if (settings_file2.length()==0) { return; }
@@ -540,13 +547,18 @@ void MainWindow::refresh_menuSettings() {
 		});
 	}
 	{
-		QAction *action=menu.addAction("New file ...");
+		QAction *action=menu.addAction("Save as new settings file (and open) ...");
 		connect(action, &QAction::triggered, [this]() {
-			QString settings_file2=QFileDialog::getSaveFileName(this, "Select a ini settings files", "sqliteplotter.settings.ini");
+			QString settings_file2=QFileDialog::getSaveFileName(this,
+				"Select a ini settings files. The filename must be formatted like 'sqliteplotter.NAME.ini'",
+				"sqliteplotter.NAME.ini",
+				"sqliteplotter settings (sqliteplotter.*.ini)");
 			if (settings_file2.length()==0) { return; }
 
 			clear_history();
-            setSettingsFile(settings_file2);
+			this->settings_file=settings_file2;
+			storeState();
+			setSettingsFile(settings_file2);
 			refresh_menuSettings();
 		});
 	}

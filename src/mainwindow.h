@@ -26,9 +26,8 @@
 #define QSETTINGS_GLOBAL_TMP		QSettings(QSETTINGS_GLOBAL_ARGS)
 #define QSETTINGS_GLOBAL            QSettings settings(QSETTINGS_GLOBAL_ARGS)
 
-#define QSETTINGS_LOCAL_PATH(MAIN)	(MAIN->root().length() \
-    ? MAIN->root() \
-    : QString("%1/.sqliteplotter.settings.%2.ini") \
+#define QSETTINGS_LOCAL_PATH(MAIN)	\
+	(MAIN->root().length() ? MAIN->root() : QString("%1/.sqliteplotter.settings.%2.ini") \
     .arg(MAIN->db.dbFiles.size()==0 ? "" : QFileInfo(MAIN->db.dbFiles[0]).absolutePath()) \
     .arg(MAIN->db.dbFiles.size()==0 ? "" : QFileInfo(MAIN->db.dbFiles[0]).fileName()))
 #define QSETTINGS_LOCAL_ARGS(MAIN)	QSETTINGS_LOCAL_PATH(MAIN), QSettings::IniFormat
