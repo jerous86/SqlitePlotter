@@ -1,5 +1,5 @@
 .DS_Store
-*.pro.user
+*.pro.user*
 
 bin/
 qbuild/
