@@ -313,6 +313,65 @@ void MainWindow::restoreState() {
 	restoringState=false;
 }
 
+// An override can be either
+// global:VAR -> VALUE
+// plot[PLOT_IDX]:VAR -> VALUE
+// trace[PLOT_IDX][TRACE_IDX] -> VALUE
+// and it will replace or add the value if the indices are valid.
+// An index can be either a single integer or a '*' (which will cause it to be added for all matching plots/traces
+void MainWindow::setCommandLineOverrides(const QMap<QString,QString> &overrides) {
+    const QRegularExpression rgxGlobal("global:(.*)");
+    const QRegularExpression rgxPlot("plot\\[([0-9,*]+)\\]:(.*)");
+    const QRegularExpression rgxTrace("plot\\[[0-9,*]+\\]\\[[0-9,*]+\\]:(.*)");
+    for(const QString &k:overrides.keys()) {
+        const QString value=overrides[k];
+        QRegularExpressionMatch m;
+        if ((m=rgxGlobal.match(k)).hasMatch()) {
+            const QString key=m.captured(1);
+            set.globalVars[key]=value;
+            qDebug()<<QString("CLI: global[%1] = %2").arg(key,value);
+
+        } else if ((m=rgxPlot.match(k)).hasMatch()) {
+            const QStringList setPlotIdxs=m.captured(1).split(",");
+            const QString key=m.captured(2);
+
+            for(int plotIdx=0; plotIdx<set.plots.size(); plotIdx++) {
+                for(const QString &setPlotIdx:setPlotIdxs) {
+                    bool ok;
+                    const int setPlotIdxInt=setPlotIdx.toInt(&ok);
+                    if (!(setPlotIdx=="*" || (ok && setPlotIdxInt==plotIdx))) { continue; }
+
+                    set.plots[plotIdx]->variables[key]=value;
+                    qDebug()<<QString("CLI: plot[%1][%2] = %3").arg(plotIdx).arg(key,value);
+                }
+            }
+        } else if ((m=rgxTrace.match(k)).hasMatch()) {
+            const QStringList setPlotIdxs=m.captured(1).split(",");
+            const QStringList setTraceIdxs=m.captured(2).split(",");
+            const QString key=m.captured(3);
+
+            for(int plotIdx=0; plotIdx<set.plots.size(); plotIdx++) {
+                for(int traceIdx=0; traceIdx<set.plots[plotIdx]->traces.size(); traceIdx++) {
+                    for(const QString &setPlotIdx:setPlotIdxs) {
+                        bool ok;
+                        const int setPlotIdxInt=setPlotIdx.toInt(&ok);
+                        if (!(setPlotIdx=="*" || (ok && setPlotIdxInt==plotIdx))) { continue; }
+
+                        for(const QString &setTraceIdx:setTraceIdxs) {
+                            const int setTraceIdxInt=setTraceIdx.toInt(&ok);
+                            if (!(setTraceIdx=="*" || (ok && setTraceIdxInt==traceIdx))) { continue; }
+
+                            set.plots[plotIdx]->traces[traceIdx]->variables[key]=value;
+                            qDebug()<<QString("CLI: trace[%1][%2][%3] = %4").arg(plotIdx).arg(traceIdx).arg(key,value);
+                        }
+                    }
+                }
+            }
+        } else {
+            qWarning()<<"Don't know how to handle command line override '"<<k<<"' with value '"<<value<<"'";
+        }
+    }
+}
 
 void MainWindow::setCustomWindowTitle(const QString &extra, const QString &table) {
 	setWindowTitle(QString("SqlitePlotter [%1] %2 (%3 rows in table %4) [last reload %5]")

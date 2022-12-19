@@ -150,6 +150,8 @@ public:
     void loadAdditionalFiles(const QStringList &files);
     void loadFile(const QFileInfo &fi);
     void setSelectedTrace(int traceIdx, bool blockSignals);
+
+    void setCommandLineOverrides(const QMap<QString,QString> &overrides);
 private:
 	void refresh_menuFile();
 	void refresh_menuSettings();
