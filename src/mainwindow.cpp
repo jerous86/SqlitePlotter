@@ -261,7 +261,7 @@ void MainWindow::restoreState() {
 
 
     QSETTINGS;
-	if (!QFileInfo(settings.fileName()).isWritable()) {
+    if (!QFileInfo(settings.fileName()).isWritable() && restoreDbFileAndSettingsFile==true) {
 		QMessageBox::warning(this,
 			QString("Settings file %1 is not writable").arg(settings.fileName()),
 			QString("The settings file\n%1\nis not writable, and your changes will not be saved.\n\n"
