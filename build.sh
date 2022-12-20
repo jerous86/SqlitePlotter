@@ -35,6 +35,7 @@ build_SqlitePlotter() (
 
 if [ $# -eq 0 ]; then $0 SqlitePlotter importers; exit 0; fi
 
+chmod +w $BIN_DIR/*
 while [ $# -gt 0 ]; do
 	case $1 in
 		SqlitePlotter)
@@ -51,3 +52,4 @@ done
 cp $(ls importers/*.cpp | sed s'#[.]cpp##g') $BIN_DIR
 cp importers/to_tsv_from_*.sh $BIN_DIR/
 cp sqliteplotter*.ini $BIN_DIR/
+chmod -w $BIN_DIR/*
