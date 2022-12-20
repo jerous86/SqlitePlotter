@@ -70,17 +70,19 @@ void MyQCustomPlotter::paintEvent(QPaintEvent *e) {
             }
         }
 
-		p.setPen(Qt::black);
-		for(const double x:verticals) {
-			const QPointF px=plottable()->coordsToPixels(x,x);
-			p.drawLine(px.x(),0, px.x(),height());
-		}
+        if (plottable()) {
+            p.setPen(Qt::black);
+            for(const double x:verticals) {
+                const QPointF px=plottable()->coordsToPixels(x,x);
+                p.drawLine(px.x(),0, px.x(),height());
+            }
 
-		p.setPen(Qt::black);
-		for(const double y:horizontals) {
-			const QPointF px=plottable()->coordsToPixels(y,y);
-			p.drawLine(0,px.y(), width(),px.y());
-		}
+            p.setPen(Qt::black);
+            for(const double y:horizontals) {
+                const QPointF px=plottable()->coordsToPixels(y,y);
+                p.drawLine(0,px.y(), width(),px.y());
+            }
+        }
 	}
 }
 
