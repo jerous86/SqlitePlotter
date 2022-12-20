@@ -107,28 +107,35 @@ void GeneratePlotTask::run_QCustomPlot(const Plot &plot, const PlotOptions &opts
         serieIdx++;
         const Trace &trace=*trace_;
         if (!trace.enabled) { continue; }
-        if (trace.style==nullptr) { continue; }
+
+        const QString q=trace.get_query(override_vars);
+        if (trace.style==nullptr && !isSpecialQuery(q)) { continue; }
 
         QStringList select_columns=QStringList()<<trace.x<<trace.y;
         if (trace.z.length()) { select_columns<<trace.z; }
         if (trace.style) { select_columns.append(trace.style->extra_columns(trace)); }
 
         QVector<double> x,y,z;
-		const QString q=trace.get_query(override_vars);
 		if (isSpecialQuery(q)) {
-			{ QRegularExpressionMatch m=matchSpecialVertical.match(q);
-				if (m.hasMatch()) {
-					const float x=m.captured(1).toFloat();
-					p->verticals<<x;
-					// TODO don't ignore color
+			for(const QString &line:q.split("\n")) {
+				// We draw the horizontal/vertical on the plot themselves.
+				// We could also add a new plot element, but then we'd have to
+				// calculate the boundaries (we cannot just go from e.g. -1e99 to 1e99
+				// as that would mess up the plot ranges)
+				{ QRegularExpressionMatch m=matchSpecialVertical.match(line);
+					if (m.hasMatch()) {
+						const float x=m.captured(1).toFloat();
+						p->verticals<<x;
+						// TODO don't ignore color
+					}
 				}
-			}
 
-			{ QRegularExpressionMatch m=matchSpecialHorizontal.match(q);
-				if (m.hasMatch()) {
-					const float y=m.captured(1).toFloat();
-					p->horizontals<<y;
-					// TODO don't ignore color
+				{ QRegularExpressionMatch m=matchSpecialHorizontal.match(line);
+					if (m.hasMatch()) {
+						const float y=m.captured(1).toFloat();
+						p->horizontals<<y;
+						// TODO don't ignore color
+					}
 				}
 			}
 		} else {

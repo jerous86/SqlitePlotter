@@ -360,8 +360,9 @@ QString remove_comments(const QString &str) {
 
 	// Here, we consider anything after a # a comment
 	//	return ret.replace(QRegularExpression("#[^#\"']*$"),"").split("\n").join(" ").trimmed();
-	auto rgx=QRegularExpression("#[^\n]*");
-	return QString(str).replace(rgx,"").split("\n").join(" ").trimmed();
+    auto rgx=QRegularExpression("#[^\n]*");
+//    return QString(str).replace(rgx,"").split("\n").join("\n").trimmed();
+    return QString(str).replace(rgx,"").trimmed();
 }
 
 QString Trace::get_query(const MapQStringQString &override_vars) const {
