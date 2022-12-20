@@ -55,6 +55,7 @@ struct StackedLine: public TraceStyle {
                 g->setData(x, y2);
                 g->setWidth(width);
                 g->setName("Offset "+trace.get_title(EmptyOverride));
+				g->setPen(QColor(Qt::white));
 
                 if (graphs.size()>0) {
                     QCPBars *below=dynamic_cast<QCPBars *>(graphs.back());
