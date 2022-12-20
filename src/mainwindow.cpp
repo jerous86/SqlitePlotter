@@ -883,6 +883,7 @@ void MainWindow::on_update(bool store, RefreshTreeMode refresh, bool autoReplotI
 	if (refresh!=0) { refresh_tree(refresh==RefreshTreeKeepSel); }
 	if (autoReplotIfOk && set.autoReplot) { on_btnPlot_clicked(); }
 	if (ui->tabs->currentWidget()==ui->tabData) { on_btnQueryData_clicked(); }
+    refresh_cmbTraceColumns(true);
 }
 
 void MainWindow::on_db_reload() {
@@ -928,7 +929,7 @@ void MainWindow::_on_txtPlotDefaultQuery_editingFinished() {
 	push_undo("Set plot's","default query");
 	GET_SEL_P(true);
 	for(Plot *plot:plots) { plot->defaultQuery=ui->txtPlotDefaultQuery->toPlainText(); }
-	on_update(true, RefreshTreeKeepSel);
+    on_update(true, RefreshTreeKeepSel);
 }
 
 #define ON_EDITING_FINISHED(OBJ, actualValue)	\

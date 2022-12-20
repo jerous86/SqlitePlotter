@@ -168,6 +168,29 @@ void MainWindow::on_tree_itemChanged(QTreeWidgetItem *item, int column) {
 	}
 }
 
+void MainWindow::refresh_cmbTraceColumns(bool blockSignals) {
+    GET_SEL_T1;
+    if (!trace) { return; }
+
+    QStringList col_names=trace->column_names(DoUseTraceQuery, NoUngroup, EmptyOverride);
+    col_names.insert(0,"");
+
+    QList<QComboBox*> cmbs= QList<QComboBox*>()<<ui->cmbTraceX<<ui->cmbTraceY<<ui->cmbTraceZ;
+    for(QComboBox *cmb :cmbs) {
+        cmb->blockSignals(blockSignals);
+        cmb->clear();
+        cmb->addItems(col_names);
+    }
+
+    ui->cmbTraceX->setCurrentIndex(ui->cmbTraceX->findText(trace->x.toUpper()));
+    ui->cmbTraceY->setCurrentIndex(ui->cmbTraceY->findText(trace->y.toUpper()));
+    ui->cmbTraceZ->setCurrentIndex(ui->cmbTraceZ->findText(trace->z.toUpper()));
+
+    for(QComboBox *cmb :cmbs) {
+        cmb->blockSignals(false);
+    }
+}
+
 void MainWindow::on_tree_itemSelectionChanged() {
 	GET_SEL_PT1(true);
 	GET_SEL_PT(false);
@@ -206,21 +229,10 @@ void MainWindow::on_tree_itemSelectionChanged() {
 
 	// Count the number of rows, and show it in the tab text
     if (trace) {
-		QStringList col_names=trace->column_names(DoUseTraceQuery, NoUngroup, EmptyOverride);
-		col_names.insert(0,"");
-
-		QList<QComboBox*> cmbs= QList<QComboBox*>()<<ui->cmbTraceX<<ui->cmbTraceY<<ui->cmbTraceZ;
-		for(QComboBox *cmb :cmbs) {
-			cmb->clear();
-			cmb->addItems(col_names);
-		}
-
+        refresh_cmbTraceColumns(true);
 		ui->txtTraceTitle->setText(trace->title);
 		ui->txtTraceQuery->setPlainText(trace->query);
 
-		ui->cmbTraceX->setCurrentIndex(ui->cmbTraceX->findText(trace->x.toUpper()));
-		ui->cmbTraceY->setCurrentIndex(ui->cmbTraceY->findText(trace->y.toUpper()));
-		ui->cmbTraceZ->setCurrentIndex(ui->cmbTraceZ->findText(trace->z.toUpper()));
 		refresh_cmbTraceType();
 		ui->cmbTraceType->setCurrentIndex(ui->cmbTraceType->findText(trace->style ? trace->style->name() : ""));
 		ui->lblTraceStyleOptions->setText(trace->style ? trace->style->toString() : "");

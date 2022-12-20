@@ -176,7 +176,8 @@ private:
 
 	void _editingFinished(QTextEdit &);
 	template<class T=QWidget>
-	T *getWidgetForPlotMode(const int index);
+    T *getWidgetForPlotMode(const int index);
+    void refresh_cmbTraceColumns(bool blockSignals);
 private slots:
 	void on_btnUndo_clicked() { undo(); }
 	void on_btnRedo_clicked() { redo(); }
