@@ -33,6 +33,11 @@ void MyQCustomPlotter::paintEvent(QPaintEvent *e) {
 
         const bool p1=x1>0 && y1>0;
         const bool p2=x2>=0 && y2>=0;
+		
+		const QFont oldFont = p.font();
+		QFont font=p.font();
+		font.setPointSize(font.pointSize() * 1.5);
+		p.setFont(font);
 
         if (p1) {
             p.setPen(p2 ? Qt::gray : Qt::black);
@@ -44,7 +49,7 @@ void MyQCustomPlotter::paintEvent(QPaintEvent *e) {
             if (plottable()) {
                 double xx1,yy1; plottable()->pixelsToCoords(x1,y1, xx1,yy1);
                 p.setPen(Qt::black);
-                p.drawText(x1,y1,QString("(%1,%2)").arg(xx1).arg(yy1));
+                p.drawText(x1+10,y1-10,QString("(%1, %2)").arg(xx1).arg(yy1));
             }
         }
 
@@ -64,8 +69,8 @@ void MyQCustomPlotter::paintEvent(QPaintEvent *e) {
                 double xx2,yy2; plottable()->pixelsToCoords(x2,y2, xx2,yy2);
 				
                 p.setPen(Qt::black);
-                p.drawText(x1,y1,QString("(%1,%2)").arg(xx1).arg(yy1));
-                p.drawText(x2,y2,QString("(%1,%2)").arg(xx2).arg(yy2));
+                p.drawText(x1+10,y1-10,QString("(%1, %2)").arg(xx1).arg(yy1));
+                p.drawText(x2+10,y2-10,QString("(%1, %2)").arg(xx2).arg(yy2));
                 p.drawText(std::min(x1,x2),(y1+y2)/2,QString("w:%1, h:%2)").arg(abs(xx1-xx2)).arg(abs(yy1-yy2)));
             }
         }
@@ -201,7 +206,8 @@ void MyQCustomPlotter::on_plottableClick(QCPAbstractPlottable *plottable, int, Q
 }
 
 
-void MyQCustomPlotter::on_itemClick(QCPAbstractItem *, QMouseEvent *) {
+void MyQCustomPlotter::on_itemClick(QCPAbstractItem *i, QMouseEvent *e) {
+    (void) i; (void) e;
 }
 
 void MyQCustomPlotter::on_legendClick(QCPLegend *l, QCPAbstractLegendItem *item, QMouseEvent *) {
