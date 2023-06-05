@@ -3,11 +3,11 @@
 
 set -ue
 
-FILE_PATH="$1"
-FILE_NAME="$(basename "$FILE_PATH")"
+FILEPATH="$1"
+FILENAME="$(basename "$FILEPATH")"
 
-printf "TIME\tFRAME_LEN\tIP_PROTO\tIP_SRC\tIP_DST\tTCP_SRC_PORT\tTCP_DST_PORT\tTCP_WINDOW_SIZE\tTCP_ACK\tUDP_SRC_PORT\tUDP_DST_PORT\tFILE_NAME\n"
-tshark -r "$FILE_PATH" -T fields -E separator="	" \
+printf "TIME\tFRAME_LEN\tIP_PROTO\tIP_SRC\tIP_DST\tTCP_SRC_PORT\tTCP_DST_PORT\tTCP_WINDOW_SIZE\tTCP_ACK\tUDP_SRC_PORT\tUDP_DST_PORT\tFILENAME\n"
+tshark -r "$FILEPATH" -T fields -E separator="	" \
 	-e frame.time_relative \
 	-e frame.len \
 	-e ip.proto \
@@ -19,5 +19,5 @@ tshark -r "$FILE_PATH" -T fields -E separator="	" \
 	-e tcp.flags.ack \
 	-e udp.srcport \
 	-e udp.dstport \
-	| sed "s#\$#\t${FILE_NAME}#g"
+	| sed "s#\$#\t${FILENAME}#g"
 

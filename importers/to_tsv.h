@@ -26,3 +26,7 @@ void printRow(const QStringList &data, int n_columns) {
 	Q_ASSERT(data.size()==n_columns);
 	std::cout<<data.join("\t").toStdString()<<"\n";
 }
+
+void printNewTable(const QString &tableName) {
+	std::cout<<"[[NEW_TABLE "<<tableName.toStdString()<<"]]\n";
+}
