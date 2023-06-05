@@ -753,10 +753,10 @@ void MainWindow::_on_btnSaveImages_clicked() {
             task.run_myPlotter(*plot, plotOptions, img, override_vars);
             img->update();
             QCoreApplication::processEvents();
-#if QT_VERSION >= QT_VERSION_CHECK(6,0,0)
-            img->pixmap().save(tgt);
-#else
+#if QT_VERSION < QT_VERSION_CHECK(5,15,0)
             img->pixmap()->save(tgt);
+#else
+            img->pixmap().save(tgt);
 #endif
 			QCoreApplication::processEvents();
 		}

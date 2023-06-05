@@ -11,11 +11,11 @@ CXX=clang++
 SOURCES := $(wildcard *.cpp)
 BINS := $(SOURCES:.cpp=)
 
-.PHONY: all
-all: $(BINS)
+.PHONY: all 
+all: clean $(BINS)
 
-%:
+%: 
 	$(CXX) -Wall -Wextra -O2 -fPIC $(CXX_FLAGS) $@.cpp -o $@
 
 clean:
-	ls -1 *.cpp | sed 's#[.]cpp##g' | xargs rm
+	ls -1 *.cpp | sed 's#[.]cpp##g' | xargs rm -f

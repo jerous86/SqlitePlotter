@@ -4,6 +4,7 @@
 #include <cmath>
 
 #include <QPainter>
+#include <QPixmap>
 #include <QGenericMatrix>
 
 #include "mainwindow.h"
@@ -210,7 +211,7 @@ void AspectRatioPixmapLabel::repaintAll() const {
 }
 
 void AspectRatioPixmapLabel::save(const QString &fname) const {
-#if LT_QT6
+#if QT_VERSION < QT_VERSION_CHECK(5,15,0)
     pixmap()->save(fname);
 #else
     pixmap().save(fname);

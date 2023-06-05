@@ -3,6 +3,7 @@
 #include <cmath>
 
 #include <QPainter>
+#include <QVector2D>
 
 #include "plot.h"
 #include "plot_myplotter.h"
