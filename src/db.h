@@ -50,25 +50,26 @@ struct Db {
 
 public:
     void import(const QString &filePath, Importer *importer);
+	bool createTable(const QString &filePath, const QString &tableName, const QStringList columnNames);
 };
 
 struct Importer {
     virtual QString name() const =0;
     virtual QStringList patterns() const = 0;
-    virtual QString tableName() const = 0;
+	
+    QString tableName() const { return _tableName; }
+    QStringList columnNames() const { return _columnNames; }
 
     virtual bool canHandleFilePath(const QString &filePath) = 0;
 
     virtual void openFile(const QString &filePath) = 0;
-    virtual QStringList columnNames() = 0;
     virtual void readAllRows() = 0;
     virtual void closeFile() { }
 
-private:
+protected:
     Db *db;
 	friend struct Db;
     QStringList _columnNames;
-    QStringList _columnsParams; // just a series of question marks
     QString _tableName;
 protected:
 	void insertRow(const QStringList &data);

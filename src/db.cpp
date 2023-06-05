@@ -33,10 +33,11 @@ void Importer::insertRow(const QStringList &data) {
 		qDebug()<<_columnNames;
 	}
 	Q_ASSERT(data.size() == _columnNames.size());
+    const QStringList columnsParams=QVector<QString>(_columnNames.size(), "?").toList();
 	Db::Stmt stmt=db->query(QString("INSERT INTO %1 (%2) VALUES (%3)")
 							.arg(_tableName)
 							.arg(_columnNames.join(','))
-							.arg(_columnsParams.join(",")));
+							.arg(columnsParams.join(",")));
 
 	for(int c=0; c<data.size(); c++) { stmt.bind(c+1, data[c]); }
 	stmt.exec();
@@ -44,6 +45,9 @@ void Importer::insertRow(const QStringList &data) {
 
 
 struct TsvImporter: Importer {
+	TsvImporter() { _tableName=TABLE_TSV; }
+	
+	protected:
     QString name() const override { return "tsv"; }
     bool canHandleFilePath(const QString &filePath) override { return filePath.endsWith(".tsv"); }
     QStringList patterns() const override { return QStringList()<<"*.tsv"; }
@@ -52,34 +56,43 @@ struct TsvImporter: Importer {
 
     QFile db_in;
     QTextStream in;
-    QStringList _columns;
+	QString filePath;
 	virtual void openFile(const QString &filePath_) override {
+		filePath=filePath_;
         db_in.setFileName(filePath_);
         db_in.open(QIODevice::ReadOnly);
 		in.setDevice(&db_in);
 
-        // We assume we always have a header here
-        QString header=in.readLine();
-		if (header.startsWith("#")) { header=header.mid(1); }
-//        header=header.replace('#', "");
-
-        _columns=header.split(sep);
-        for(QString &h:_columns) { h=h.trimmed(); }
+		readHeader(); // We assume we always have a header here
     }
 	virtual void closeFile() override { db_in.close(); }
-	virtual QString tableName() const override { return TABLE_TSV; }
-	virtual QStringList columnNames() override { return _columns; }
+	
+	void readHeader() {
+        QString header=in.readLine();
+		if (header.startsWith("#")) { header=header.mid(1); }
+        _columnNames=header.split(sep);
+        for(QString &h:_columnNames) { h=h.trimmed(); }
+	}
 
     void readAllRows() override {
+		const QString origTableName=_tableName;
         while (!in.atEnd()) {
-            QStringList data=in.readLine().split(sep);
-            for(QString &r:data) {
-                while (r.startsWith('"') && r.endsWith('"')) {
-                    r=r.mid(1,r.length()-2);
-                }
-            }
-            insertRow(data);
+			const QString line=in.readLine();
+			if (line.startsWith("[[NEW_TABLE ")) {
+				_tableName=QString("%1_%2").arg(origTableName).arg(QString(line).replace("[[","").replace("]]","").split(" ")[1]);
+				readHeader();
+				if (_columnNames.size()==0 || !db->createTable(filePath, _tableName, _columnNames)) { return; }
+			} else {
+				QStringList data=line.split(sep);
+				for(QString &r:data) {
+					while (r.startsWith('"') && r.endsWith('"')) {
+						r=r.mid(1,r.length()-2);
+					}
+				}
+				insertRow(data);
+			}
         }
+		_tableName=origTableName;
     }
 };
 
@@ -87,14 +100,15 @@ struct TsvImporter: Importer {
 struct ExtCmdImporter: TsvImporter {
 	ExtCmdImporter(const QString &name_, const QString &tableName_,
 		const QStringList &patterns_, const QString &command_):
-		_name(name_), _tableName(tableName_), _patterns(patterns_), _command(command_) {
+		_name(name_), _patterns(patterns_), _command(command_) {
+		_tableName=tableName_;
 		qDebug()<<"\t\t\tNew importer "<<name_;
 		qDebug()<<"\t\t\t\tTable: "<<tableName_;
 		qDebug()<<"\t\t\t\tPatterns: "<<patterns_;
 		qDebug()<<"\t\t\t\tCommand: "<<command_;
 	}
+	private:
 	const QString _name;
-	const QString _tableName;
 	const QStringList _patterns;
 	const QString _command;
 
@@ -102,7 +116,7 @@ struct ExtCmdImporter: TsvImporter {
 	bool canHandleFilePath(const QString &filePath) override {
 		for(const QString &pattern:_patterns) {
 			//const auto re=QRegularExpression(QRegularExpression::wildcardToRegularExpression(pattern));
-			const auto re=QRegularExpression(QString(pattern).replace(".","${DOT}").replace("*",".*").replace("?",".").replace("${DOT}","\\."));
+			const auto re=QRegularExpression(QString("^%1$").arg(pattern).replace(".","${DOT}").replace("*",".*").replace("?",".").replace("${DOT}","\\."));
 			if (re.match(filePath).hasMatch()) { return true; }
 		}
 		return false;
@@ -129,25 +143,28 @@ struct ExtCmdImporter: TsvImporter {
 		TsvImporter::openFile(tmpFile);
 		Q_ASSERT(columnNames().size()>0);
 	}
-	QString tableName() const override { return _tableName; }
 };
 
+bool Db::createTable(const QString &filePath, const QString &tableName, const QStringList columnNames) {
+	qDebug()<<"Creating table "<<tableName<<" with columns "<<columnNames.join(",");
+    if (query(QString("CREATE TABLE IF NOT EXISTS %1 (%2)")
+              .arg(tableName)
+              .arg(columnNames.join(","))).exec()!=SQLITE_DONE) {
+        LOG_ERROR("Failed to create table while loading file "+filePath);
+		LOG_ERROR("  for table "+tableName);
+		LOG_ERROR("  and columns "+columnNames.join(","));
+        return false;
+    }
+	return true;
+}
 
 void Db::import(const QString &filePath, Importer *importer) {
     importer->db=this;
     importer->openFile(filePath);
     importer->_tableName=importer->tableName();
     importer->_columnNames=importer->columnNames();
-    importer->_columnsParams=QVector<QString>(importer->_columnNames.size(), "?").toList();
-
-    if (query(QString("CREATE TABLE IF NOT EXISTS %1 (%2)")
-              .arg(importer->_tableName)
-              .arg(importer->_columnNames.join(","))).exec()!=SQLITE_DONE) {
-        LOG_ERROR("Failed to create table while loading file "+filePath);
-		LOG_ERROR("  for table "+importer->_tableName);
-		LOG_ERROR("  and columns "+importer->_columnNames.join(","));
-        return;
-    }
+	
+	if (importer->_columnNames.size()==0 || !createTable(filePath, importer->_tableName, importer->_columnNames)) { return; }
 
     importer->readAllRows();
     importer->closeFile();
@@ -243,8 +260,10 @@ Db::Stmt::Stmt(Db &db_, const QString &query_, int verbosity): db(db_), query(qu
 
 	const int res=sqlite3_prepare_v2(db.db, query.toStdString().c_str(), -1, &stmt, nullptr);
 	if (res!=SQLITE_OK) {
-		errorMsg=sqlite3_errmsg(db.db);
-		LOG_ERROR("sqlite3_prepare_v2 return error "<<res<<" "<<errorMsg<<" "<<" for \n"<<query);
+        errorMsg=sqlite3_errmsg(db.db);
+        if (verbosity>=0) {
+            LOG_ERROR("sqlite3_prepare_v2 return error "<<res<<" "<<errorMsg<<" "<<" for \n"<<query);
+        }
 	} else if (!stmt) {
 		errorMsg=sqlite3_errmsg(db.db);
 		if (verbosity>=1) {
