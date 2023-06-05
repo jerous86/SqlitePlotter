@@ -32,10 +32,11 @@
     .arg(MAIN->db.dbFiles.size()==0 ? "" : QFileInfo(MAIN->db.dbFiles[0]).fileName()))
 #define QSETTINGS_LOCAL_ARGS(MAIN)	QSETTINGS_LOCAL_PATH(MAIN), QSettings::IniFormat
 
-#define QSETTINGS2(MAIN)		QSettings settings(QSETTINGS_LOCAL_ARGS(MAIN))
-#define QSETTINGS2_TMP(MAIN)	QSettings(QSETTINGS_LOCAL_ARGS(MAIN))
+#include <iostream>
+#define QSETTINGS2(MAIN)		QSettings settings(QSETTINGS_LOCAL_ARGS(MAIN)); settings.setFallbacksEnabled(false)
+//#define QSETTINGS2_TMP(MAIN)	QSettings(QSETTINGS_LOCAL_ARGS(MAIN))
 #define QSETTINGS               QSETTINGS2(this)
-#define QSETTINGS_TMP			QSETTINGS2_TMP(this)
+//#define QSETTINGS_TMP			QSETTINGS2_TMP(this)
 
 
 Trace *pos_to_trace(Set &set, const QList<QVariant> &pos);
