@@ -319,7 +319,7 @@ void MainWindow::restoreState() {
 // trace[PLOT_IDX][TRACE_IDX] -> VALUE
 // and it will replace or add the value if the indices are valid.
 // An index can be either a single integer or a '*' (which will cause it to be added for all matching plots/traces
-void MainWindow::setCommandLineOverrides(const QMap<QString,QString> &overrides) {
+void MainWindow::setCommandLineOverrides(const QMap<QString,QString> &overrides, int select_plot) {
     const QRegularExpression rgxGlobal("global:(.*)");
     const QRegularExpression rgxPlot("plot\\[([0-9,*]+)\\]:(.*)");
     const QRegularExpression rgxTrace("plot\\[[0-9,*]+\\]\\[[0-9,*]+\\]:(.*)");
@@ -371,6 +371,10 @@ void MainWindow::setCommandLineOverrides(const QMap<QString,QString> &overrides)
             qWarning()<<"Don't know how to handle command line override '"<<k<<"' with value '"<<value<<"'";
         }
     }
+	
+	if (select_plot>=0) { 
+		ui->tree->topLevelItem(select_plot)->setSelected(true);
+	}
 }
 
 void MainWindow::setCustomWindowTitle(const QString &extra, const QString &table) {

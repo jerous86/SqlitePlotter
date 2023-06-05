@@ -151,7 +151,7 @@ public:
     void loadFile(const QFileInfo &fi);
     void setSelectedTrace(int traceIdx, bool blockSignals);
 
-    void setCommandLineOverrides(const QMap<QString,QString> &overrides);
+    void setCommandLineOverrides(const QMap<QString,QString> &overrides, int select_plot);
 private:
 	void refresh_menuFile();
 	void refresh_menuSettings();
