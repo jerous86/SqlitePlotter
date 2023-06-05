@@ -457,7 +457,7 @@ const Trace::Rows *Trace::addToCache(const QString &id, const Trace::Rows &rows)
 	Q_ASSERT(!findInCache(id));
 	//    printCache("Before addToCache "+id+" "+QString::number(rows.size()));
 	mruCache.push_front(QPair<QString,Rows>(id,rows));
-	while (mruCache.size()>20) { mruCache.pop_back(); }
+    while (mruCache.size()>100) { mruCache.pop_back(); }
 	//    printCache("After addToCache "+id+" "+QString::number(rows.size()));
 	return &mruCache.front().second;
 }
@@ -511,46 +511,84 @@ const Trace::Rows *Trace::data(const QStringList &select_columns, UseTraceQuery 
 	QList<int> col_idxs;
 	for(const QString &col:select_columns) {
 		col_idxs<<int(col_names.indexOf(QRegularExpression(col, QRegularExpression::CaseInsensitiveOption)));
+        if (col_idxs.back()<0) {
+            qWarning()<<"Could not find column "<<col;
+            col_idxs.pop_back();
+        }
 	}
 
-	QList<QList<QVariant>> ret;
-	if (select_columns.length()>0 && col_idxs.size()<2) { return nullptr; } // ensure x *and* y are set
+    QList<QList<QVariant>> ret;
+    if (select_columns.length()>0 && col_idxs.size()<2) { return nullptr; } // ensure x *and* y are set
 
-	QList<QVariant> row;
-	while ((row=q.next_row()).count()>0) {
-		if (select_columns.length()>0) {
-			QList<QVariant> cols;
-			for(int col:col_idxs) { if (col>=0) { cols<<row[col]; } }
+    QList<QVariant> row;
+    if (select_columns.size()!=col_idxs.size()) {
+        qWarning()<<"Selected columns differs from the expected columns!";
+        qWarning()<<"\tselected: "<<select_columns;
+        qWarning()<<"\texpected: "<<col_idxs;
+    }
 
-			if (select_columns.size()==cols.size()) {
-				// This replaces a variable like $[VAR] with the contents of column VAR
-				for(QVariant &col:cols) {
-					if (isString(col) && col.toString().contains("$[")) {
-						col=QVariant(replaceSqlVars(col.toString(), cols, select_columns));
-					}
-				}
-			} else {
-				qDebug()<<"Selected columns differs from the expected columns!";
-				qDebug()<<"\tselected: "<<select_columns;
-				qDebug()<<"\texpected: "<<cols;
-			}
-			ret<<cols;
-		} else {
-			ret<<row;
-		}
-	}
+    if (select_columns.length()>0) {
+        while ((row=q.next_row()).count()>0) {
+            QList<QVariant> cols;
+            for(int col:col_idxs) { cols<<row[col]; }
 
-	//	qDebug()<<"Caching "<<cacheId<<" rows:"<<ret.size();
-	//	qDebug()<<lquery;
-	return addToCache(cacheId, ret);
+            // Disabled it for now, to in crease performance. Don't think it's being used that much anyway.
+//            if (select_columns.size()==cols.size()) {
+//                // This replaces a variable like $[VAR] with the contents of column VAR
+//                for(QVariant &col:cols) {
+//                    if (isString(col) && col.toString().contains("$[")) {
+//                        col=QVariant(replaceSqlVars(col.toString(), cols, select_columns));
+//                    }
+//                }
+//            }
+            ret<<cols;
+        }
+    } else {
+        while ((row=q.next_row()).count()>0) {
+            ret<<row;
+        }
+    }
+
+    //	qDebug()<<"Caching "<<cacheId<<" rows:"<<ret.size();
+    //	qDebug()<<lquery;
+    return addToCache(cacheId, ret);
 }
 
 unsigned Trace::rowCount(UseTraceQuery use_trace_query, enum UngroupQuery ungroup, const MapQStringQString &override_vars) const {
-	QString query=use_trace_query==DoUseTraceQuery ? get_query(override_vars) : plot->get_query(merge(variables, override_vars));
+    QString query=use_trace_query==DoUseTraceQuery ? get_query(override_vars) : plot->get_query(merge(variables, override_vars));
 	if (ungroup==UngroupQuery::Ungroup) { query=ungroupQuery(query); }
 	if (isSpecialQuery(query)) { return 0; }
-	Db::Stmt q=plot->set->db.query(query);
-	return q.row_count();
+    const QString row_count_query=QString(query).replace(QRegularExpression("SELECT[[:space:]].*[[:space:]]FROM[[:space:]]", QRegularExpression::DotMatchesEverythingOption), "SELECT COUNT(*) FROM ");
+    if (true) {
+        const QString cacheId=QString("0x%1;%2")
+            .arg(reinterpret_cast<uint64_t>(&plot->set->db))
+            .arg(query);
+        const Rows *cachedRows=findInCache(cacheId);
+        if (!cachedRows) {
+            Db::Stmt q=plot->set->db.query(row_count_query, -1);
+            if (q.errorMsg.isNull()) {
+                const QList<QVariant> xs=q.next_row();
+                Q_ASSERT(xs.length()==1);
+                addToCache(cacheId, QList<QList<QVariant>>{xs});
+            } else {
+                // We come here if we are using e.g. a GROUP BY on a column that's defined in the columns list.
+                // Unfortunately, this query is slower than the count above ...
+                Db::Stmt q=plot->set->db.query(query, -1);
+                const int row_count=q.row_count();
+                QList<QVariant> xs={QVariant(row_count)};
+                addToCache(cacheId, QList<QList<QVariant>>{xs});
+            }
+        }
+
+        cachedRows=findInCache(cacheId);
+        Q_ASSERT(cachedRows);
+        const Rows &rows=*cachedRows;
+        return rows[0][0].toInt();
+    } else {
+        // This is really slow for large queries ...
+        Db::Stmt q=plot->set->db.query(query);
+        return q.row_count();
+    }
 }
 
 void Trace::invalidateCache() {
